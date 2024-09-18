@@ -1,0 +1,308 @@
+.meal-list-container {
+    background-color: #1D1D1D;
+    padding-top: 10px;
+    padding: 20px; /*khang khong co,Hong 20px*/
+}
+
+.section-title {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.nutrition-icon {
+    width: 20px; 
+    height: auto; 
+    margin-right: 5px;
+}
+
+.food-card {
+    width: calc(33.33% - 20px);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.food-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.food-card-link:hover {
+    text-decoration: none; 
+}
+
+.food-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.food-card:hover {
+    transform: translateY(-5px); /* Move the card up slightly */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.food-image-container {
+    height: 200px;
+    overflow: hidden;
+}
+
+.food-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.food-details {
+    padding: 16px;
+    text-decoration: none;
+    background-color: rgb(255, 255, 255);
+}
+
+.food-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+    color: rgb(0, 0, 0);
+}
+
+.nutrition-info {
+    display: flex;
+    flex-wrap: wrap;
+    text-align: center;
+    color: #D3A121;
+    align-items: center;
+    margin-left: 63px;
+}
+
+.info-item {
+    flex: 1 1 50%;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.footer-section {
+    background-color:  #272728;
+    padding: 40px 0;
+    text-align: center;
+    margin-top: 30px;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-content ul li {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.footer-content ul li:last-child {
+    margin-right: 0;    
+}
+
+.footer-content ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.footer-content p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.SearchBox {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.SearchInput {
+    position: absolute;
+    left: 1130px;
+    margin-top: 80px;
+}
+
+.SearchContainer {
+    width: 230px;
+    padding: 10px;
+    height: 20px; 
+    font-size: 16px;
+    color: #000000;
+    background-color: transparent;
+    border: none;
+    background-color: white;
+    border-radius: 16px;
+    outline: none;
+}
+.button-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.filter-icon{
+    width: 15px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.arrow-icon {
+    width: 15px;
+    height: auto;
+    margin-right: 5px;
+}
+
+
+.meal-list-container button{
+    display: block;
+    width: 200;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    background-color: white;
+    border: none; 
+    color: black;
+    font-weight: lighter;
+    border-radius: 17px;
+}
+
+.SearchResults {
+    position: absolute;
+    top: 70px; 
+    left: 1030px; /*khang 840px*/
+    width: 350px; /*khang 30%*/
+    background-color: white;
+    border-top: none; 
+    z-index: 1000; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow-y: auto; 
+    border-radius: 10px;
+}
+
+.SearchResults::-webkit-scrollbar {
+    width: 0; 
+    height: 0; 
+}
+
+.SearchResultItem {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.FoodThumbnail {
+    width: 100px; 
+    height: 100px; 
+    margin-right: 10px;
+}
+
+.FoodTitle_Search {
+    color: black;
+    font-size: large;    
+    font-weight: bold;
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.SearchResultItem:hover {
+    background-color: #f5f5f5;
+}
+
+.filterlist {
+    margin-top: 20px;
+}
+
+.filtercontent {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.filter-button {
+    background-color: #ffffff;
+    color: #333;
+    padding: 5px 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+
+}
+
+.filter-button:hover {
+    background-color: #D3A121;
+}
+
+.filter-button.active {
+    background-color: #D3A121;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.sort-dropdown{
+    position: absolute;
+    top: 320px; /* Khang drop down top 345px,Hong 320px */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    padding-top: 1px;
+}
+
+.filter-dropdown {
+    position: absolute;
+    top: 320px; 
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    padding: 10px;
+    padding-top: 1px;
+    left: 95px;
+}
+.meal-list-container .divider{
+    width: 1px;
+    height: 20px;
+    margin: 0 5px;
+    border-left: 1px solid black; 
+}
+.sort-dropdown button,
+.filter-dropdown span {
+    display: block;
+    padding: 3px 2px;
+    cursor: pointer;
+}
+
+.sort-dropdown button:hover,
+.filter-dropdown span:hover {
+    background-color: #f5f5f5;
+}
+
+

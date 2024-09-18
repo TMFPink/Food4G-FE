@@ -1,0 +1,51 @@
+.CreateFoodContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 20px;
+    /* height: 100vh; */
+}
+
+.CreateFoodForm {
+    max-width: 300px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.CreateFoodForm label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.CreateFoodForm input {
+    width: 92%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.CreateFoodForm button {
+    width: 100%;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.CreateFoodForm button:hover {
+    background-color: #0056b3;
+}
+
+/* span {
+    color: red;
+    font-weight: bold;
+} */
+
+button {
+    font-weight: bold;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
