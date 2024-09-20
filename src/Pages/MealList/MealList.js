@@ -28,11 +28,11 @@ function Food() {
 useEffect(() => {
   const fetchData = async () => {
     try {
-      const foodResponse = await axios.get('http://localhost:3001/food');
+      const foodResponse = await axios.get('https://food4g-api.onrender.com/food');
       setListoffood(foodResponse.data);
       console.log("Food Data:", foodResponse.data);
       
-      const ingredientResponse = await axios.get('http://localhost:3001/foodingre');
+      const ingredientResponse = await axios.get('https://food4g-api.onrender.com/foodingre');
       setfoodingredient(ingredientResponse.data);
       console.log("Ingredient Data:", ingredientResponse.data);
     } catch (error) {

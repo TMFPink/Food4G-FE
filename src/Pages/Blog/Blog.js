@@ -15,7 +15,7 @@ function Blog({ user, isLoggedIn }) {
     const [editPostId, setEditPostId] = useState(null); // Track the post being edited
 
     useEffect(() => {
-        axios.get("http://localhost:3001/posts").then((response) => {
+        axios.get("https://food4g-api.onrender.com/posts").then((response) => {
             setListOfPosts(response.data.reverse());
         });
     }, []);
@@ -23,18 +23,18 @@ function Blog({ user, isLoggedIn }) {
     const handlePostSubmit = async () => {
         if (editPostId) {
             // If editPostId is set, it means we are updating an existing post
-            await axios.put(`http://localhost:3001/posts/${editPostId}`, newPost);
+            await axios.put(`https://food4g-api.onrender.com/posts/${editPostId}`, newPost);
         } else {
             // Otherwise, we are creating a new post
             const postWithUsername = {
                 ...newPost,
                 username: user ? user.Name : '' 
             };
-            await axios.post("http://localhost:3001/posts", postWithUsername);
+            await axios.post("https://food4g-api.onrender.com/posts", postWithUsername);
         }
 
         // Refresh posts after update or creation
-        axios.get("http://localhost:3001/posts").then((response) => {
+        axios.get("https://food4g-api.onrender.com/posts").then((response) => {
             setListOfPosts(response.data.reverse());
         });
 
@@ -59,7 +59,7 @@ function Blog({ user, isLoggedIn }) {
     };
 
     const deletePost = async (postId) => {
-        await axios.delete(`http://localhost:3001/posts/${postId}`);
+        await axios.delete(`https://food4g-api.onrender.com/posts/${postId}`);
         setListOfPosts(listOfPosts.filter(post => post.id !== postId));
     };
 

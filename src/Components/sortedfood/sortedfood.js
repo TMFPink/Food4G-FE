@@ -28,7 +28,7 @@ function SortedFood() {
 
   
   useEffect(() => {
-    axios.get(`http://localhost:3001/food/byType/${type}`).then((response) => {
+    axios.get(`https://food4g-api.onrender.com/food/byType/${type}`).then((response) => {
       setSortedFoods(response.data);
       console.log("Sorted Food Data:", response.data);
     }).catch((error) => {
@@ -38,11 +38,11 @@ function SortedFood() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const foodResponse = await axios.get('http://localhost:3001/food');
+        const foodResponse = await axios.get('https://food4g-api.onrender.com/food');
         setListoffood(foodResponse.data);
         console.log("Food Data:", foodResponse.data);
         
-        const ingredientResponse = await axios.get('http://localhost:3001/foodingre');
+        const ingredientResponse = await axios.get('https://food4g-api.onrender.com/foodingre');
         setfoodingredient(ingredientResponse.data);
         console.log("Ingredient Data:", ingredientResponse.data);
       } catch (error) {

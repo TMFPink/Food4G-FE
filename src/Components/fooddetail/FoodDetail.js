@@ -15,10 +15,10 @@ function FoodDetail() {
   const [foodDetail, setFoodDetail] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/food/${id}`).then((response) => {
+    axios.get(`https://food4g-api.onrender.com/food/${id}`).then((response) => {
       setFood(response.data);
     });
-    axios.get(`http://localhost:3001/fooddetail/${id}`).then((response) => {
+    axios.get(`https://food4g-api.onrender.com/fooddetail/${id}`).then((response) => {
       setFoodDetail(response.data);
     });
   }, [id]);

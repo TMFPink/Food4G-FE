@@ -12,7 +12,6 @@ import SortedFood from '../sortedfood/sortedfood';
 import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-
 function Navbar() { 
   const [isVisible, setIsVisible] = useState(false);
 
@@ -79,9 +78,8 @@ function Navbar() {
     Address: Yup.string().required('*'),
   });
 
-
   const handleLoginSubmit = (data) => {
-    axios.post('http://localhost:3001/auth/login', data)
+    axios.post('https://food4g-api.onrender.com/auth/login', data)
       .then((response) => {
         console.log("Login Response:", response.data);
         if (response.data.message === "YOU LOGGED IN!!!") {
@@ -104,7 +102,7 @@ function Navbar() {
 
 
   const handleRegisterSubmit = (data) => {
-    axios.post('http://localhost:3001/auth', data)
+    axios.post('https://food4g-api.onrender.com/auth', data)
       .then(() => {
         console.log("Register success");
         setShowRegisterSuccessPopup(true);

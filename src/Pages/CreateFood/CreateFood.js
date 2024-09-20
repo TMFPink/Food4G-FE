@@ -21,7 +21,7 @@ function CreateFood() {
   });
 
   const onSubmit = (values) => { 
-    axios.post('http://localhost:3001/food',values).then((response) => {
+    axios.post('https://food4g-api.onrender.com/food',values).then((response) => {
       console.log("Food created")
     })
   }

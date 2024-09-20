@@ -17,7 +17,7 @@ function TDEERec() {
     const [tdee, setTdee] = useState(0);
 
     useEffect(() => {
-        axios.get(`http://localhost:3001/food/`).then((response) => {
+        axios.get(`https://food4g-api.onrender.com/food/`).then((response) => {
         setListoffood(response.data);
         });
     }, []);
