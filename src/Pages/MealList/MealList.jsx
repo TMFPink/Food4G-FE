@@ -311,7 +311,7 @@ function Food() {
 
       {/* Search results dropdown */}
       {searchQuery && (
-        <div className="absolute left-[47.5rem] top-[10.4rem] w-96 h-96 z-10 bg-white shadow-lg rounded-lg p-4  overflow-y-auto">
+        <div className="absolute left-[36.5%] top-[25%] w-96 h-96 z-10 bg-white shadow-lg rounded-lg p-4  overflow-y-auto">
           {searchResults.map((result) => (
             <div
               key={result.ID}
