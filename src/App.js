@@ -1,4 +1,5 @@
 import './App.css';
+import './output.css';
 // import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 // import Food from './Pages/Food';
 // import Home from './Pages/Home';
