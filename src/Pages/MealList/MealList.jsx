@@ -311,28 +311,30 @@ function Food() {
 
       {/* Search results dropdown */}
       {searchQuery && (
-        <div className="absolute left-[47.5rem] top-[10.4rem] w-96 h-96 z-10 bg-white shadow-lg rounded-lg p-4  overflow-y-auto">
-          {searchResults.map((result) => (
-            <div
-              key={result.ID}
-              className="SearchResultItem flex items-center p-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                navigation(`/FoodDetail/${result.id}`);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              <img
-                src={getImageUrl(result.id)}
-                alt="food"
-                className="FoodThumbnail w-16 h-16 rounded-md mr-2"
-              />
-              <div className="FoodTitle_Search text-gray-800">
-                {result.FoodName.length > 20
-                  ? result.FoodName.substring(0, 20) + "..."
-                  : result.FoodName}
+        <div className="flex justify-center">
+          <div className="relative w-96 max-h-60 z-10 bg-white shadow-lg rounded-lg p-4 overflow-y-auto">
+            {searchResults.map((result) => (
+              <div
+                key={result.ID}
+                className="SearchResultItem flex items-center p-2 hover:bg-gray-100 cursor-pointer"
+                onClick={() => {
+                  navigation(`/FoodDetail/${result.id}`);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                <img
+                  src={getImageUrl(result.id)}
+                  alt="food"
+                  className="FoodThumbnail w-16 h-16 rounded-md mr-2"
+                />
+                <div className="FoodTitle_Search text-gray-800">
+                  {result.FoodName.length > 20
+                    ? result.FoodName.substring(0, 20) + "..."
+                    : result.FoodName}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       )}
 

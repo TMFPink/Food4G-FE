@@ -11,6 +11,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.6.8",
     "formik": "^2.4.5",
+    "ng-zorro-antd": "^18.2.0",
     "postcss": "^8.4.47",
     "postcss-cli": "^11.0.0",
     "react": "^18.2.0",
