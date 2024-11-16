@@ -30,7 +30,7 @@ function SortedFood() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/food/byType/${type}`)
+      .get(`http://localhost:3001/food/type/${type}`)
       .then((response) => {
         setSortedFoods(response.data);
         console.log("Sorted Food Data:", response.data);

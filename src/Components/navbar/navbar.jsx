@@ -325,7 +325,7 @@ function Navbar() {
           <Route path="/" element={<Home />} />
           <Route path="/food" exact Component={Food} />
           <Route path="/tdee" exact Component={TDEE} />
-          <Route path="/fooddetail/:id" exact Component={FoodDetail} />
+          <Route path="/FoodDetail/:id" exact Component={FoodDetail} />
           <Route path="/sorted-food/:type" exact Component={SortedFood} />
           <Route path="/trackcalo" exact Component={TrackCalo} />
           <Route
