@@ -7,6 +7,7 @@ import proteinIcon from "../../Asset/meallist/protein.png";
 import carbIcon from "../../Asset/meallist/carb.png";
 import fatIcon from "../../Asset/meallist/fat.png";
 import caloriesIcon from "../../Asset/meallist/calories.png";
+import { message } from "antd";
 
 function FoodDetail() {
   let { id } = useParams();
@@ -21,6 +22,28 @@ function FoodDetail() {
       setFoodDetail(response.data);
     });
   }, [id]);
+
+  const handleAddToTrack = async () => {
+    const uid = localStorage.getItem('uid');
+    try {
+      await axios.post("http://localhost:3001/track-food/add", {
+        UserID: uid,
+        Calories: food.Calories,
+        Protein: food.Protein,
+        Carb: food.Carb,
+        Fat: food.Fat
+      });
+      setTimeout(()=>{
+        message.success("Add success");
+      },0)
+      
+    } catch (error) {
+      setTimeout(()=>{
+        message.error("Error adding food to track");
+      },0)
+      
+    }
+  };
 
   if (!foodDetail) {
     return <div>Loading...</div>;
@@ -69,8 +92,8 @@ function FoodDetail() {
               ))}
             </ul>
             <div className="flex justify-center mt-20">
-              <button className="bg-black text-white py-2 px-4 w-20 rounded-lg hover:bg-[#D3A231]">
-                Add
+              <button onClick={handleAddToTrack} className="bg-black text-white py-2 px-4 w-full rounded-lg hover:bg-[#D3A231]">
+                Add to track
               </button>
             </div>
           </div>

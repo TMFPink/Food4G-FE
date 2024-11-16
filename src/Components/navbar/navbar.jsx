@@ -36,6 +36,7 @@ function Navbar() {
     setShowRegisterForm(false);
     setShowLoginForm(true);
   };
+  
 
   const closeLoginForm = () => {
     setShowLoginForm(false);
@@ -60,6 +61,8 @@ function Navbar() {
     setShowRegisterSuccessPopup(false);
     setShowRegisterErrorPopup(false);
   };
+
+  
 
   // validation schema
   const loginSchema = Yup.object().shape({
@@ -89,6 +92,9 @@ function Navbar() {
           closeRegisterForm();
           setShowLoginSuccessPopup(true);
           setUser(response.data.user);
+
+          localStorage.setItem('userName',response.data.user.Name)
+          localStorage.setItem('uid',response.data.user.id)
           setIsLoggedIn(true);
         } else {
           // closeLoginForm();
@@ -104,7 +110,7 @@ function Navbar() {
 
   const handleRegisterSubmit = (data) => {
     axios
-      .post("http://localhost:3001/auth", data)
+      .post("http://localhost:3001/auth/register", data)
       .then(() => {
         console.log("Register success");
         setShowRegisterSuccessPopup(true);
@@ -120,6 +126,7 @@ function Navbar() {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.clear()
     setIsLoggedIn(false);
   };
 
@@ -216,7 +223,7 @@ function Navbar() {
                 <li className="relative group">
                   <Link
                     to="/food"
-                    className="block py-2 px-3 flex items-center rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#D3A231] md:p-0 "
+                    className="py-2 px-3 flex items-center rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#D3A231] md:p-0 "
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -276,14 +283,16 @@ function Navbar() {
                     BLOG
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/trackcalo"
-                    className="block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#D3A231] md:p-0 "
-                  >
-                    TRACK CALORIES
-                  </Link>
-                </li>
+                {isLoggedIn && (
+                    <li>
+                    <Link
+                      to="/trackcalo"
+                      className="block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#D3A231] md:p-0 "
+                    >
+                      TRACK CALORIES
+                    </Link>
+                  </li>
+                )}
                 {user ? (
                   <li className="text-white p-2 relative group hover:text-[#D3A231] flex items-center">
                     <span className="mr-1">HI,</span>
