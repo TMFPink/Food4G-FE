@@ -4,18 +4,22 @@ import axios from "axios";
 import "./TDEERec.css";
 import caloriesIcon from "../../Asset/meallist/calories.png";
 import tdeebg from "../../Asset/tdee/tdee-background.jpg";
+import { message } from "antd";
 function TDEERec() {
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [activityLevel, setActivityLevel] = useState("1");
+  const [aim, setAim] = useState("Lose weight");
   const [recommendation, setRecommendation] = useState("");
   const [error, setError] = useState("");
   const [showError, setShowError] = useState(false);
   const [showRecommendation, setShowRecommendation] = useState(false);
   const [listoffood, setListoffood] = useState([]);
   const [tdee, setTdee] = useState(0);
+  const [nutrition, setNutrition] = useState([])
+  const [userInfo, setUserInfo] = useState([])
 
   useEffect(() => {
     axios.get(`http://localhost:3001/food/`).then((response) => {
@@ -55,21 +59,37 @@ function TDEERec() {
     }
 
     let tdee;
+    let protein,carb,fat;
     switch (parseInt(activityLevel)) {
       case 1:
         tdee = bmr * 1.2;
+        protein = 0.8 * parsedWeight;
+        carb = 3 * parsedWeight;
+        fat = 0.8 * parsedWeight;
         break;
       case 2:
         tdee = bmr * 1.375;
+        protein = 1.0 * parsedWeight;
+        carb = 4 * parsedWeight;
+        fat = 1.0 * parsedWeight;
         break;
       case 3:
         tdee = bmr * 1.55;
+        protein = 1.2 * parsedWeight;
+        carb = 5 * parsedWeight;
+        fat = 1.2 * parsedWeight;
         break;
       case 4:
         tdee = bmr * 1.725;
+        protein = 1.5 * parsedWeight;
+        carb = 6 * parsedWeight;
+        fat = 1.5 * parsedWeight;
         break;
       case 5:
         tdee = bmr * 1.9;
+        protein = 1.8 * parsedWeight;
+        carb = 7 * parsedWeight;
+        fat = 1.8 * parsedWeight;
         break;
       default:
         setRecommendation(
@@ -77,6 +97,9 @@ function TDEERec() {
         );
         return;
     }
+
+    setNutrition({ protein, carb, fat });
+    setUserInfo({weight,height})
 
     let recommendationText;
 
@@ -114,6 +137,34 @@ function TDEERec() {
 
   const handleCloseRecommendation = () => {
     setShowRecommendation(false);
+  };
+
+  const handleSaveToProgress = async () => {
+    const uid = localStorage.getItem('uid'); 
+    
+    const foodIntakeData = {
+      userId: uid,
+      Calories: tdee,
+      Protein: nutrition.protein, 
+      Fat: nutrition.fat, 
+      Carb: nutrition.carb,
+    };
+    const userInfoUpdate = {
+      Aim: aim,
+      Weight: userInfo.weight,
+      Height: userInfo.height
+    }
+
+    
+
+    try {
+      await axios.post("http://localhost:3001/intake", foodIntakeData);
+      await axios.post(`http://localhost:3001/users/update/${uid}`, userInfoUpdate)
+      message.success("Saved to progress successfully!");
+    } catch (error) {
+      console.error("Error saving to progress:", error);
+      message.error("Failed to save to progress.");
+    }
   };
 
   return (
@@ -154,42 +205,59 @@ function TDEERec() {
               ></p>
               <div className="flex space-x-4 overflow-x-auto my-5">
                 {listoffood
-                    .sort((a, b) => {
-                        const differenceA = Math.abs(a.Calories - tdee);
-                        const differenceB = Math.abs(b.Calories - tdee);
-                        // Ascending order (Lowest to Highest)
-                        if (tdee > 2300) {
-                            return differenceA - differenceB;
-                        } else { // Descending order (Highest to Lowest)
-                            return differenceB - differenceA;
-                        }
-                    })
-                    .slice(0, 4)
-                    .map((value, key) => (
-                        <div key={key} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:translate-y-[-5px] hover:shadow-lg w-1/4">
-                            <Link to={`/FoodDetail/${value.id}`} className="block text-black no-underline">
-                                <div className="h-52 overflow-hidden">
-                                    <img className="w-full h-full object-cover" src={getImageUrl(value.id)} alt="Food" />
-                                </div>
-                                <div className="p-4 bg-white">
-                                    <div className="text-lg font-bold mb-2 text-center">{value.FoodName}</div>
-                                    <div className="flex flex-col items-center text-yellow-600">
-                                        <div className="flex items-center mt-2">
-                                            <img className="w-5 h-auto mr-1" src={caloriesIcon} alt="Calories" />
-                                            Calories: {value.Calories}
-                                        </div>
-                                    </div>
-                                </div>
-                            </Link>
+                  .filter(value => {
+                    if (aim === "Lose weight") {
+                      return value.Calories < 180 && value.Calories > 100;
+                    } else if (aim === "Gain weight, build muscle") {
+                      return value.Protein >= 30;
+                    } else {
+                      return true;
+                    }
+                  })
+                  .sort((a, b) => {
+                    const differenceA = Math.abs(a.Calories - tdee);
+                    const differenceB = Math.abs(b.Calories - tdee);
+                    if (tdee > 2300) {
+                      return differenceA - differenceB;
+                    } else {
+                      return differenceB - differenceA;
+                    }
+                  })
+                  .slice(0, 4)
+                  .map((value, key) => (
+                    <div key={key} className="bg-white rounded-lg shadow-md overflow-hidden transition-transform transform hover:translate-y-[-5px] hover:shadow-lg w-1/4">
+                      <Link to={`/FoodDetail/${value.id}`} className="block text-black no-underline">
+                        <div className="h-52 overflow-hidden">
+                          <img className="w-full h-full object-cover" src={getImageUrl(value.id)} alt="Food" />
                         </div>
-                    ))}
+                        <div className="p-4 bg-white">
+                          <div className="text-lg font-bold mb-2 text-center">{value.FoodName}</div>
+                          <div className="flex flex-col items-center text-yellow-600">
+                            <div className="flex items-center mt-2">
+                              <img className="w-5 h-auto mr-1" src={caloriesIcon} alt="Calories" />
+                              Calories: {value.Calories}
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+                  ))}
               </div>
-              <button
-                className="mt-2 px-4 py-2 w-48 bg-black text-white rounded"
-                onClick={handleCloseRecommendation}
-              >
-                Close
-              </button>
+              <div className="flex flex-row gap-5 justify-center">
+                <button
+                  className="mt-2 px-4 py-2 w-48 bg-black text-white rounded hover:bg-[#D3A231]"
+                  onClick={handleCloseRecommendation}
+                >
+                  Close
+                </button>
+                <button
+                  className="mt-2 px-4 py-2 w-48 bg-black text-white rounded hover:bg-[#D3A231]"
+                  onClick={handleSaveToProgress}
+                >
+                  Save to progress
+                </button>
+              </div>
+              
             </div>
           )}
           <div className="mb-4 relative">
@@ -290,6 +358,22 @@ function TDEERec() {
               </option>
               <option value="4">Very active (exercise 6-7 days/week)</option>
               <option value="5">Super active (twice/day)</option>
+            </select>
+          </div>
+
+          <div className="mb-4">
+            <label htmlFor="Aim" className="block mb-2 text-gray-700">
+              Meal plans: 
+            </label>
+            <select
+              id="aim"
+              value={aim}
+              onChange={(e) => (setAim(e.target.value))}
+              className="w-full p-2 border border-gray-300 rounded"
+            >
+              <option value="Lose weight">Lose weight</option>
+              <option value="Gain weight, build muscle">Gain weight, build muscle</option>
+              <option value="Maintain weight">Maintain weight</option>
             </select>
           </div>
 

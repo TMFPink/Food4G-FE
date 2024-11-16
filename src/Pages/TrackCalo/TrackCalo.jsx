@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Column } from "@ant-design/charts";
+import { Bar } from 'react-chartjs-2';
 import meditiation from "../../Asset/trackcalo/meditiation.png";
 import { IoFootsteps } from "react-icons/io5";
 import { FaFire } from "react-icons/fa6";
@@ -14,74 +14,89 @@ import proteinIcon from "../../Asset/meallist/protein.png";
 import carbIcon from "../../Asset/meallist/carb.png";
 import fatIcon from "../../Asset/meallist/fat.png";
 import caloriesIcon from "../../Asset/meallist/calories.png";
+import axios from "axios";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 function TrackCalo() {
-  const data = [
-    { month: "Today", type: "protein", value: 202 },
-    { month: "Today", type: "carbs", value: 408 },
-    { month: "Today", type: "fat", value: 87 },
-  ];
-
-  const config = {
-    data,
-    xField: "month",
-    yField: "value",
-    seriesField: "type",
-    isPercent: false,
-    isStack: false,
-    meta: {
-      value: {
-        min: 0,
-      },
-    },
-    colorField: "type",
-    color: ["#3B82F6", "#4ADE80", "#7DD3FC"],
-  };
-
-  const onPanelChange = (value, mode) => {
-    console.log(value.format("YYYY-MM-DD"), mode);
-  };
-
-  const [isEditing, setIsEditing] = useState(false);
   const [userInfo, setUserInfo] = useState({
-    name: "Tran Minh Nguyen Hong",
-    age: "21 years old",
-    location: "TPHCM, Vietnam",
-    bloodType: "O+",
-    height: "186cm",
-    weight: "90kg",
+    userId: localStorage.getItem('uid'),
+    userName: localStorage.getItem('userName'),
   });
+  const [userHealth, setUserHealth] = useState(null);
+  const [nutritionTrack, setNutritionTrack] = useState(null);
+  const [chartData, setChartData] = useState([]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
-  };
+  useEffect(() => {
+    const fetchNutritionData = async () => {
+      const id = { uid: localStorage.getItem("uid") };
+      try {
+        const response = await axios.get(`http://localhost:3001/intake/${userInfo.userId}`);
+        setNutritionTrack(response.data);
+        const user = await axios.post("http://localhost:3001/users/get-me", id);
+        setUserHealth(user.data);
+        const chartDataResponse = await axios.get(`http://localhost:3001/track-food/${localStorage.getItem("uid")}`);
+        setChartData(chartDataResponse.data);
+      } catch (error) {
+        console.error("Error fetching nutrition data:", error);
+      }
+    };
 
-  const handleChange = (e) => {
-    setUserInfo({ ...userInfo, [e.target.name]: e.target.value });
-  };
+    if (userInfo.userId) {
+      fetchNutritionData();
+    }
+  }, [userInfo.userId]);
 
-  const handleSave = () => {
-    setIsEditing(false);
-  };
+  // Prepare data for the chart
+  const data = chartData.map(item => ({
+    date: item.date,
+    totalCalories: Number(item.totalCalories),
+    totalProtein: Number(item.totalProtein),
+    totalFat: Number(item.totalFat),
+    totalCarb: Number(item.totalCarb),
+  }));
 
-  const handleCancel = () => {
-    setIsEditing(false);
+  const transformedData = {
+    labels: data.map(item => item.date),
+    datasets: [
+      {
+        label: 'Calories',
+        data: data.map(item => item.totalCalories),
+        backgroundColor: '#3B82F6',
+      },
+      {
+        label: 'Protein',
+        data: data.map(item => item.totalProtein),
+        backgroundColor: '#4ADE80',
+      },
+      {
+        label: 'Fat',
+        data: data.map(item => item.totalFat),
+        backgroundColor: '#F97316',
+      },
+      {
+        label: 'Carb',
+        data: data.map(item => item.totalCarb),
+        backgroundColor: '#FBBF24',
+      },
+    ],
   };
 
   return (
     <div>
-      <div className="grid grid-cols-5 grid-rows-5 gap-4 bg-[#1D1D1D] text-white p-6 shadow-lg">
-        <div className="col-span-4 row-span-5">
+      <div className="grid grid-cols-4 grid-rows-5 gap-4 bg-[#1D1D1D] text-white p-6 shadow-lg">
+        <div className="col-span-3 row-span-5">
           <h1 className="text-3xl font-bold mb-5">Dashboard Overview</h1>
           <header
-            className="mb-6 p-4 rounded-md h-80"
+            className="mb-6 p-4 rounded-md h-40"
             style={{
               backgroundImage:
                 "linear-gradient(to right, #d3a231, #c9704f, #995360, #5a4255, #2d2d2d)",
             }}
           >
             <h2 className="text-4xl font-semibold mt-2">
-              Hello Tran Minh Nguyen Hong,
+              Hello {userInfo.userName},
             </h2>
             <p className="mt-1 text-xl">
               Have a nice day and don't forget to take care of your health!
@@ -93,18 +108,47 @@ function TrackCalo() {
             />
           </header>
           <div className="mt-6  rounded-md flex">
-            <div className="w-2/3 rounded-md bg-white p-4">
+            <div className="w-full rounded-md bg-white p-4">
               <h3 className="text-3xl font-bold text-black text-center">
-                Daily Caloric Intake
+                Daily Nutritional Intake
               </h3>
-              <Column {...config} />
+              <Bar data={transformedData} options={{ responsive: true }} />
             </div>
-            <div className="w-1/4 mx-auto  bg-gray-200 rounded-md p-4 ">
+
+          </div>
+        </div>
+        <div className="row-span-5 col-start-4   bg-white p-6 rounded-lg">
+          {userHealth ? (         
+            <section className="text-center  flex flex-col items-center bg-gray-200 p-5 rounded-lg">
+            <div className="flex items-center justify-center w-12 h-12 bg-black rounded-full">
+              <FaUser className="text-2xl text-white" />
+            </div>
+            <h3 className="text-2xl text-black font-bold mb-2 text-nowrap">
+              {userInfo.userName}
+            </h3>
+
+            <div className="text-center">
+              <div className="grid grid-cols-2 gap-4 space-x-2">
+                <div className=" p-2  ">
+                  <p className="text-gray-500">Height</p>
+                  <p className="text-black font-bold text-xl">{userHealth.user.Height}</p>
+                </div>
+                <div className="p-2">
+                  <p className="text-gray-500">Weight</p>
+                  <p className="text-black font-bold text-xl">{userHealth.user.Weight}</p>
+                </div>
+              </div>
+              <div className="p-2">
+                <p className="text-gray-500">Aim</p>
+                <p className="text-black font-bold text-xl">{userHealth.user.Aim}</p>
+              </div>
+            </div>
+            <div className="  bg-gray-200  border-t-2  border-black">
               <h3 className="text-2xl font-bold text-black text-center mt-8">
-                Nutritional Information
+                Nutritional a day
               </h3>
-              <div className="flex flex-col gap-4 items-center justify-center mt-12">
-                <div className="bg-white p-4 rounded-md w-1/2 text-white text-center border-2 border-black">
+              {nutritionTrack ? (<div className="flex flex-col gap-4 items-center justify-center mt-6">
+                <div className="bg-white p-4 rounded-md  text-white text-center border-2 border-black w-48">
                   <div className="flex items-center justify-center ">
                     <div className="inline-flex items-center justify-center rounded-full mr-2">
                       <img
@@ -114,77 +158,42 @@ function TrackCalo() {
                       />
                     </div>
                     <p className="text-black">
-                      <span className="font-bold text-2xl">202</span>
-                      <span className="font-light text-base"> gam</span>
+                      <span className="font-bold text-2xl">{nutritionTrack.Protein}</span>
+                      <span className="font-light text-base"> g</span>
                     </p>
                   </div>
-                  <p className="ml-7 text-black">Protein</p>
+                  <p className="ml-7 text-black font-bold">Protein</p>
                 </div>
-                <div className="bg-white p-4 rounded-md w-1/2 text-white text-center border-2 border-black">
+                <div className="bg-white p-4 rounded-md  text-white text-center border-2 border-black w-48">
                   <div className="flex items-center justify-center">
                     <div className="inline-flex items-center justify-center rounded-full mr-2">
                       <img src={carbIcon} alt="Carbs" className="w-10 h-10" />
                     </div>
                     <p className="text-black">
-                      <span className="text-2xl font-bold">408</span>{" "}
-                      <span className="text-base font-light">gam</span>
+                      <span className="text-2xl font-bold">{nutritionTrack.Carb}</span>{" "}
+                      <span className="text-base font-light">g</span>
                     </p>
                   </div>
-                  <p className="ml-4 text-black">Carbs</p>
+                  <p className="ml-4 text-black font-bold">Carbs</p>
                 </div>
-                <div className="bg-white p-4 rounded-md w-1/2 text-white text-center border-2 border-black">
+                <div className="bg-white p-4 rounded-md  text-white text-center border-2 border-black w-48">
                   <div className="flex items-center justify-center">
                     <div className="inline-flex items-center justify-center rounded-full mr-2">
                       <img src={fatIcon} alt="Fat" className="w-10 h-10" />
                     </div>
                     <p className="text-black">
-                      <span className="text-2xl font-bold">87</span>{" "}
-                      <span className="text-base font-light">gam</span>
+                      <span className="text-2xl font-bold">{nutritionTrack.Fat}</span>{" "}
+                      <span className="text-base font-light">g</span>
                     </p>
                   </div>
-                  <p className="ml-2 text-black">Fat</p>
+                  <p className="ml-2 text-black font-bold">Fat</p>
                 </div>
-              </div>
+              </div>):null}
+              
             </div>
-          </div>
-        </div>
-        <div className="row-span-5 col-start-5 bg-white p-6 rounded-lg">
-          <section className="text-center  flex flex-col items-center bg-gray-200 p-5 rounded-lg">
-            <div className="flex items-center justify-center w-12 h-12 bg-black rounded-full">
-              <FaUser className="text-2xl text-white" />
-            </div>
-            <h3 className="text-2xl text-black font-bold mb-2 text-nowrap">
-              {userInfo.name}
-            </h3>
-            <p className="font-medium text-black text-sm mb-5">
-              {userInfo.age} | <FaMapMarkerAlt className="inline" /> {userInfo.location}
-            </p>
-
-            <div className="  text-center">
-              <div className="grid grid-cols-3 gap-4 space-x-2">
-                <div className=" p-2">
-                  <p className="text-gray-500">Blood</p>
-                  <p className="text-black font-bold text-xl">{userInfo.bloodType}</p>
-                </div>
-                <div className=" p-2  ">
-                  <p className="text-gray-500">Height</p>
-                  <p className="text-black font-bold text-xl">{userInfo.height}</p>
-                </div>
-                <div className="p-2">
-                  <p className="text-gray-500">Weight</p>
-                  <p className="text-black font-bold text-xl">{userInfo.weight}</p>
-                </div>
-              </div>
-            </div>
-            <Button onClick={handleEditClick} className="mt-4 bg-blue-500 text-white">
-              Edit
-            </Button>
-          </section>
-          <Calendar
-            fullscreen={false}
-            onPanelChange={onPanelChange}
-            className="mt-4"
-          />
+          </section>):null}
+ 
+            
         </div>
       </div>
       <footer className="bg-[#272728] py-10 text-center">
@@ -208,73 +217,6 @@ function TrackCalo() {
           </p>
         </div>
       </footer>
-
-      <Modal
-        title={<div style={{ textAlign: 'center' }}>Edit User Information</div>}
-        visible={isEditing}
-        onOk={handleSave}
-        onCancel={handleCancel}
-      >
-        <div>
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={userInfo.name}
-            onChange={handleChange}
-            className="border-b-2 border-gray-500 w-full mb-2"
-          />
-          <label>Age:</label>
-          <div className="flex items-center">
-            <input
-              type="text"
-              name="age"
-              value={userInfo.age.replace(" years old", "")}
-              onChange={handleChange}
-              className="border-b-2 border-gray-500 w-full mb-2"
-            />
-            <span className="ml-2 text-nowrap">years old</span>
-          </div>
-          <label>Location:</label>
-          <input
-            type="text"
-            name="location"
-            value={userInfo.location}
-            onChange={handleChange}
-            className="border-b-2 border-gray-500 w-full mb-2"
-          />
-          <label>Blood Type:</label>
-          <input
-            type="text"
-            name="bloodType"
-            value={userInfo.bloodType}
-            onChange={handleChange}
-            className="border-b-2 border-gray-500 w-full mb-2"
-          />
-          <label>Height:</label>
-          <div className="flex items-center">
-            <input
-              type="text"
-              name="height"
-              value={userInfo.height.replace("cm", "")}
-              onChange={handleChange}
-              className="border-b-2 border-gray-500 w-full mb-2"
-            />
-            <span className="ml-2">cm</span>
-          </div>
-          <label>Weight:</label>
-          <div className="flex items-center">
-            <input
-              type="text"
-              name="weight"
-              value={userInfo.weight.replace("kg", "")}
-              onChange={handleChange}
-              className="border-b-2 border-gray-500 w-full mb-2"
-            />
-            <span className="ml-2">kg</span>
-          </div>
-        </div>
-      </Modal>
     </div>
   );
 }
