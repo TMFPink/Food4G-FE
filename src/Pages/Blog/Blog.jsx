@@ -196,7 +196,7 @@ function Blog({ user, isLoggedIn }) {
             <div className="bg-black text-white text-center p-2">
               {value.title}
             </div>
-            <div className="text-left leading-8 p-2">{value.postText}</div>
+            <div className="text-left leading-8 p-2 bg-white text-black rounded-b-lg">{value.postText}</div>
           </div>
         ))}
       </div>
