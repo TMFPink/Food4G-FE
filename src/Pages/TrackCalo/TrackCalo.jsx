@@ -32,11 +32,11 @@ function TrackCalo() {
     const fetchNutritionData = async () => {
       const id = { uid: localStorage.getItem("uid") };
       try {
-        const response = await axios.get(`http://localhost:3001/intake/${userInfo.userId}`);
+        const response = await axios.get(`http://13.251.119.140:3001/intake/${userInfo.userId}`);
         setNutritionTrack(response.data);
-        const user = await axios.post("http://localhost:3001/users/get-me", id);
+        const user = await axios.post("http://13.251.119.140:3001/users/get-me", id);
         setUserHealth(user.data);
-        const chartDataResponse = await axios.get(`http://localhost:3001/track-food/${localStorage.getItem("uid")}`);
+        const chartDataResponse = await axios.get(`http://13.251.119.140:3001/track-food/${localStorage.getItem("uid")}`);
         setChartData(chartDataResponse.data);
       } catch (error) {
         console.error("Error fetching nutrition data:", error);

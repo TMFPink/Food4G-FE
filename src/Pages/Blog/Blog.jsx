@@ -18,7 +18,7 @@ function Blog({ user, isLoggedIn }) {
   const [editPostId, setEditPostId] = useState(null); // Track the post being edited
 
   useEffect(() => {
-    axios.get("http://localhost:3001/posts").then((response) => {
+    axios.get("http://13.251.119.140:3001/posts").then((response) => {
       setListOfPosts(response.data.reverse());
     });
   }, []);
@@ -26,18 +26,18 @@ function Blog({ user, isLoggedIn }) {
   const handlePostSubmit = async () => {
     if (editPostId) {
       // If editPostId is set, it means we are updating an existing post
-      await axios.put(`http://localhost:3001/posts/${editPostId}`, newPost);
+      await axios.put(`http://13.251.119.140:3001/posts/${editPostId}`, newPost);
     } else {
       // Otherwise, we are creating a new post
       const postWithUsername = {
         ...newPost,
         username: user ? user.Name : "",
       };
-      await axios.post("http://localhost:3001/posts", postWithUsername);
+      await axios.post("http://13.251.119.140:3001/posts", postWithUsername);
     }
 
     // Refresh posts after update or creation
-    axios.get("http://localhost:3001/posts").then((response) => {
+    axios.get("http://13.251.119.140:3001/posts").then((response) => {
       setListOfPosts(response.data.reverse());
     });
 
@@ -62,7 +62,7 @@ function Blog({ user, isLoggedIn }) {
   };
 
   const deletePost = async (postId) => {
-    await axios.delete(`http://localhost:3001/posts/${postId}`);
+    await axios.delete(`http://13.251.119.140:3001/posts/${postId}`);
     setListOfPosts(listOfPosts.filter((post) => post.id !== postId));
   };
 

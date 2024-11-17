@@ -30,7 +30,7 @@ function SortedFood() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/food/type/${type}`)
+      .get(`http://13.251.119.140:3001/food/type/${type}`)
       .then((response) => {
         setSortedFoods(response.data);
         console.log("Sorted Food Data:", response.data);
@@ -42,12 +42,12 @@ function SortedFood() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const foodResponse = await axios.get("http://localhost:3001/food");
+        const foodResponse = await axios.get("http://13.251.119.140:3001/food");
         setListoffood(foodResponse.data);
         console.log("Food Data:", foodResponse.data);
 
         const ingredientResponse = await axios.get(
-          "http://localhost:3001/foodingre"
+          "http://13.251.119.140:3001/foodingre"
         );
         setfoodingredient(ingredientResponse.data);
         console.log("Ingredient Data:", ingredientResponse.data);
