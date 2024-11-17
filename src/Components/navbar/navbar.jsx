@@ -84,7 +84,7 @@ function Navbar() {
 
   const handleLoginSubmit = (data) => {
     axios
-      .post("http://localhost:3001/auth/login", data)
+      .post("http://13.251.119.140:3001/auth/login", data)
       .then((response) => {
         console.log("Login Response:", response.data);
         if (response.data.message === "YOU LOGGED IN!!!") {
@@ -110,7 +110,7 @@ function Navbar() {
 
   const handleRegisterSubmit = (data) => {
     axios
-      .post("http://localhost:3001/auth/register", data)
+      .post("http://13.251.119.140:3001/auth/register", data)
       .then(() => {
         console.log("Register success");
         setShowRegisterSuccessPopup(true);

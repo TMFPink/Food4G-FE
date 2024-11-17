@@ -22,7 +22,7 @@ function TDEERec() {
   const [userInfo, setUserInfo] = useState([])
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/food/`).then((response) => {
+    axios.get(`http://13.251.119.140:3001/food/`).then((response) => {
       setListoffood(response.data);
     });
   }, []);
@@ -158,8 +158,8 @@ function TDEERec() {
     
 
     try {
-      await axios.post("http://localhost:3001/intake", foodIntakeData);
-      await axios.post(`http://localhost:3001/users/update/${uid}`, userInfoUpdate)
+      await axios.post("http://13.251.119.140:3001/intake", foodIntakeData);
+      await axios.post(`http://13.251.119.140:3001/users/update/${uid}`, userInfoUpdate)
       message.success("Saved to progress successfully!");
     } catch (error) {
       console.error("Error saving to progress:", error);

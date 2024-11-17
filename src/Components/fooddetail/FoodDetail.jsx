@@ -15,10 +15,10 @@ function FoodDetail() {
   const [foodDetail, setFoodDetail] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/food/${id}`).then((response) => {
+    axios.get(`http://13.251.119.140:3001/food/${id}`).then((response) => {
       setFood(response.data);
     });
-    axios.get(`http://localhost:3001/fooddetail/${id}`).then((response) => {
+    axios.get(`http://13.251.119.140:3001/fooddetail/${id}`).then((response) => {
       setFoodDetail(response.data);
     });
   }, [id]);
@@ -26,7 +26,7 @@ function FoodDetail() {
   const handleAddToTrack = async () => {
     const uid = localStorage.getItem('uid');
     try {
-      await axios.post("http://localhost:3001/track-food/add", {
+      await axios.post("http://13.251.119.140:3001/track-food/add", {
         UserID: uid,
         Calories: food.Calories,
         Protein: food.Protein,
